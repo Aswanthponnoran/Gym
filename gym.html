@@ -1,0 +1,2275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>IRONX — Premium Fitness Club</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- GSAP -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+
+    <!-- GSAP ScrollTrigger -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+
+    <style>
+
+        /* =========================================
+           RESET
+        ========================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: #080808;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        img {
+            width: 100%;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+        ::selection {
+            background: #d7ff00;
+            color: #000;
+        }
+
+
+        /* =========================================
+           CUSTOM CURSOR
+        ========================================= */
+
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #d7ff00;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width .25s, height .25s, background .25s;
+        }
+
+        .cursor-dot {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            background: #d7ff00;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+        }
+
+
+        /* =========================================
+           LOADER
+        ========================================= */
+
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: #080808;
+            z-index: 100000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader-content {
+            text-align: center;
+        }
+
+        .loader-title {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(70px, 12vw, 160px);
+            letter-spacing: 8px;
+            line-height: .8;
+        }
+
+        .loader-line {
+            width: 0;
+            height: 3px;
+            background: #d7ff00;
+            margin: 30px auto 0;
+        }
+
+
+        /* =========================================
+           NAVBAR
+        ========================================= */
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            mix-blend-mode: normal;
+        }
+
+        .logo {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 34px;
+            letter-spacing: 3px;
+        }
+
+        .logo span {
+            color: #d7ff00;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #d7ff00;
+            left: 0;
+            bottom: -6px;
+            transition: .3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-btn {
+            padding: 12px 22px;
+            border: 1px solid #d7ff00;
+            color: #d7ff00;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+            transition: .3s;
+        }
+
+        .nav-btn:hover {
+            background: #d7ff00;
+            color: #000;
+        }
+
+        .menu-btn {
+            display: none;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+
+        /* =========================================
+           HERO
+        ========================================= */
+
+        .hero {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(0,0,0,.95) 0%,
+                    rgba(0,0,0,.55) 50%,
+                    rgba(0,0,0,.35) 100%
+                ),
+                url("https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=2000&q=90")
+                center/cover;
+            transform: scale(1.1);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(
+                    circle at 75% 45%,
+                    rgba(215,255,0,.12),
+                    transparent 35%
+                );
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 90%;
+            max-width: 1400px;
+            margin: auto;
+            padding-top: 100px;
+        }
+
+        .hero-small {
+            color: #d7ff00;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+        }
+
+        .hero-title {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(90px, 14vw, 210px);
+            line-height: .78;
+            letter-spacing: 2px;
+            max-width: 1000px;
+            overflow: hidden;
+        }
+
+        .hero-title span {
+            display: block;
+        }
+
+        .hero-title .outline {
+            color: transparent;
+            -webkit-text-stroke: 2px white;
+        }
+
+        .hero-description {
+            max-width: 480px;
+            margin-top: 40px;
+            color: #aaa;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+        }
+
+        .btn {
+            padding: 16px 30px;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 2px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #d7ff00;
+            color: #000;
+        }
+
+        .btn-outline {
+            border: 1px solid #555;
+            color: white;
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            border-color: #d7ff00;
+            color: #d7ff00;
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 35px;
+            left: 5%;
+            z-index: 5;
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: #888;
+            writing-mode: vertical-rl;
+        }
+
+        .hero-number {
+            position: absolute;
+            right: 5%;
+            bottom: 35px;
+            font-family: "Bebas Neue";
+            font-size: 80px;
+            color: rgba(255,255,255,.08);
+        }
+
+
+        /* =========================================
+           MARQUEE
+        ========================================= */
+
+        .marquee {
+            overflow: hidden;
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+            padding: 25px 0;
+            white-space: nowrap;
+        }
+
+        .marquee-track {
+            display: inline-flex;
+            gap: 50px;
+        }
+
+        .marquee-item {
+            font-family: "Bebas Neue";
+            font-size: 55px;
+            letter-spacing: 3px;
+            color: #d7ff00;
+        }
+
+        .marquee-item:nth-child(even) {
+            color: white;
+        }
+
+
+        /* =========================================
+           ABOUT
+        ========================================= */
+
+        .about {
+            padding: 150px 5%;
+        }
+
+        .section-label {
+            color: #d7ff00;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+            align-items: center;
+        }
+
+        .section-title {
+            font-family: "Bebas Neue";
+            font-size: clamp(60px, 8vw, 120px);
+            line-height: .85;
+        }
+
+        .section-title span {
+            color: #d7ff00;
+        }
+
+        .about-text {
+            color: #999;
+            line-height: 1.9;
+            font-size: 15px;
+        }
+
+        .about-text p {
+            margin-bottom: 25px;
+        }
+
+        .about-image {
+            margin-top: 60px;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        .about-image img {
+            height: 100%;
+            object-fit: cover;
+        }
+
+
+        /* =========================================
+           STATS
+        ========================================= */
+
+        .stats {
+            padding: 80px 5%;
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .stat {
+            text-align: center;
+            border-right: 1px solid #222;
+        }
+
+        .stat:last-child {
+            border: none;
+        }
+
+        .stat-number {
+            font-family: "Bebas Neue";
+            font-size: 75px;
+            color: #d7ff00;
+        }
+
+        .stat-label {
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 11px;
+        }
+
+
+        /* =========================================
+           WORKOUT SECTION
+        ========================================= */
+
+        .workouts {
+            padding: 150px 0;
+            overflow: hidden;
+        }
+
+        .workout-heading {
+            padding: 0 5%;
+            margin-bottom: 70px;
+        }
+
+        .horizontal-wrapper {
+            width: max-content;
+            display: flex;
+            gap: 30px;
+            padding-left: 5%;
+        }
+
+        .workout-card {
+            width: 400px;
+            height: 550px;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #151515;
+        }
+
+        .workout-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .8s;
+        }
+
+        .workout-card:hover img {
+            transform: scale(1.08);
+        }
+
+        .workout-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                transparent 35%,
+                rgba(0,0,0,.9)
+            );
+        }
+
+        .workout-content {
+            position: absolute;
+            z-index: 2;
+            bottom: 35px;
+            left: 30px;
+        }
+
+        .workout-number {
+            color: #d7ff00;
+            font-size: 11px;
+            letter-spacing: 3px;
+        }
+
+        .workout-name {
+            font-family: "Bebas Neue";
+            font-size: 55px;
+            margin-top: 5px;
+        }
+
+        .workout-desc {
+            color: #bbb;
+            font-size: 13px;
+            max-width: 280px;
+            line-height: 1.6;
+        }
+
+
+        /* =========================================
+           PROGRAMS
+        ========================================= */
+
+        .programs {
+            padding: 150px 5%;
+        }
+
+        .program-grid {
+            margin-top: 70px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .program {
+            padding: 50px 35px;
+            background: #111;
+            border: 1px solid #222;
+            position: relative;
+            transition: .4s;
+        }
+
+        .program:hover {
+            transform: translateY(-12px);
+            border-color: #d7ff00;
+        }
+
+        .program-icon {
+            font-size: 45px;
+            margin-bottom: 30px;
+        }
+
+        .program h3 {
+            font-family: "Bebas Neue";
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .program p {
+            color: #888;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           PRICING
+        ========================================= */
+
+        .pricing {
+            padding: 150px 5%;
+            background: #0c0c0c;
+        }
+
+        .pricing-heading {
+            text-align: center;
+        }
+
+        .pricing-heading .section-title {
+            margin-bottom: 20px;
+        }
+
+        .pricing-heading p {
+            color: #888;
+        }
+
+        .pricing-grid {
+            margin-top: 70px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .price-card {
+            padding: 50px 35px;
+            border: 1px solid #252525;
+            background: #101010;
+            position: relative;
+        }
+
+        .price-card.featured {
+            border: 1px solid #d7ff00;
+            transform: scale(1.04);
+        }
+
+        .popular {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 8px 15px;
+            background: #d7ff00;
+            color: #000;
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .price-name {
+            font-family: "Bebas Neue";
+            font-size: 40px;
+        }
+
+        .price {
+            font-family: "Bebas Neue";
+            font-size: 75px;
+            margin: 20px 0;
+        }
+
+        .price small {
+            font-family: "Inter";
+            font-size: 12px;
+            color: #777;
+        }
+
+        .features {
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .features li {
+            padding: 12px 0;
+            border-bottom: 1px solid #222;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .features li::before {
+            content: "✓";
+            color: #d7ff00;
+            margin-right: 10px;
+        }
+
+        .price-card .btn {
+            width: 100%;
+            text-align: center;
+        }
+
+
+        /* =========================================
+           CTA
+        ========================================= */
+
+        .cta {
+            min-height: 70vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.85)),
+                url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=2000&q=90")
+                center/cover fixed;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta h2 {
+            font-family: "Bebas Neue";
+            font-size: clamp(80px, 13vw, 190px);
+            line-height: .8;
+        }
+
+        .cta h2 span {
+            color: #d7ff00;
+        }
+
+        .cta p {
+            color: #bbb;
+            max-width: 500px;
+            margin: 35px auto;
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        footer {
+            padding: 70px 5% 30px;
+            background: #050505;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 50px;
+        }
+
+        .footer-logo {
+            font-family: "Bebas Neue";
+            font-size: 55px;
+        }
+
+        .footer-logo span {
+            color: #d7ff00;
+        }
+
+        footer p {
+            color: #777;
+            max-width: 350px;
+            line-height: 1.8;
+            font-size: 13px;
+        }
+
+        footer h4 {
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            color: #d7ff00;
+        }
+
+        footer ul {
+            list-style: none;
+        }
+
+        footer li {
+            margin-bottom: 12px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        footer li:hover {
+            color: white;
+        }
+
+        .copyright {
+            border-top: 1px solid #1d1d1d;
+            margin-top: 60px;
+            padding-top: 25px;
+            color: #555;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 900px) {
+
+            .nav-links,
+            .nav-btn {
+                display: none;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: 20vw;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px 0;
+            }
+
+            .stat:nth-child(2) {
+                border: none;
+            }
+
+            .program-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .price-card.featured {
+                transform: none;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+
+        @media (max-width: 600px) {
+
+            .cursor,
+            .cursor-dot {
+                display: none;
+            }
+
+            .navbar {
+                padding: 20px;
+            }
+
+            .hero-content {
+                width: 90%;
+            }
+
+            .hero-title {
+                font-size: 25vw;
+            }
+
+            .hero-description {
+                font-size: 13px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 200px;
+            }
+
+            .about,
+            .programs,
+            .pricing {
+                padding: 100px 5%;
+            }
+
+            .about-image {
+                height: 400px;
+            }
+
+            .workout-card {
+                width: 300px;
+                height: 450px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .stat-number {
+                font-size: 55px;
+            }
+
+            .marquee-item {
+                font-size: 40px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .copyright {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .cta {
+                min-height: 60vh;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+
+    <!-- =========================================
+         CURSOR
+    ========================================= -->
+
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+
+
+    <!-- =========================================
+         LOADER
+    ========================================= -->
+
+    <div class="loader">
+
+        <div class="loader-content">
+
+            <div class="loader-title">
+                IRONX
+            </div>
+
+            <div class="loader-line"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         NAVBAR
+    ========================================= -->
+
+    <header class="navbar">
+
+        <a href="#" class="logo magnetic">
+            IRON<span>X</span>
+        </a>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="#about">About</a>
+            </li>
+
+            <li>
+                <a href="#workouts">Workouts</a>
+            </li>
+
+            <li>
+                <a href="#programs">Programs</a>
+            </li>
+
+            <li>
+                <a href="#pricing">Membership</a>
+            </li>
+
+        </ul>
+
+        <a href="#pricing" class="nav-btn magnetic">
+            Join Now
+        </a>
+
+        <div class="menu-btn">
+            ☰
+        </div>
+
+    </header>
+
+
+    <!-- =========================================
+         HERO
+    ========================================= -->
+
+    <section class="hero">
+
+        <div class="hero-bg"></div>
+
+        <div class="hero-content">
+
+            <div class="hero-small hero-reveal">
+                Premium Fitness Club
+            </div>
+
+            <h1 class="hero-title">
+
+                <span class="hero-line">BUILD</span>
+
+                <span class="hero-line outline">YOUR</span>
+
+                <span class="hero-line">LEGACY</span>
+
+            </h1>
+
+            <p class="hero-description hero-reveal">
+
+                Train harder. Move stronger. Become the strongest
+                version of yourself with our elite training programs,
+                professional coaches and premium facilities.
+
+            </p>
+
+            <div class="hero-buttons hero-reveal">
+
+                <a href="#pricing"
+                   class="btn btn-primary magnetic">
+
+                    Start Training
+
+                </a>
+
+                <a href="#workouts"
+                   class="btn btn-outline magnetic">
+
+                    Explore
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="hero-scroll">
+            SCROLL TO EXPLORE ↓
+        </div>
+
+        <div class="hero-number">
+            01
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         MARQUEE
+    ========================================= -->
+
+    <section class="marquee">
+
+        <div class="marquee-track">
+
+            <div class="marquee-item">
+                STRENGTH
+            </div>
+
+            <div class="marquee-item">
+                POWER
+            </div>
+
+            <div class="marquee-item">
+                DISCIPLINE
+            </div>
+
+            <div class="marquee-item">
+                FITNESS
+            </div>
+
+            <div class="marquee-item">
+                STRENGTH
+            </div>
+
+            <div class="marquee-item">
+                POWER
+            </div>
+
+            <div class="marquee-item">
+                DISCIPLINE
+            </div>
+
+            <div class="marquee-item">
+                FITNESS
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         ABOUT
+    ========================================= -->
+
+    <section class="about" id="about">
+
+        <div class="about-grid">
+
+            <div>
+
+                <div class="section-label reveal">
+                    01 — About IronX
+                </div>
+
+                <h2 class="section-title reveal">
+                    TRAIN<br>
+                    <span>WITHOUT</span><br>
+                    LIMITS.
+                </h2>
+
+            </div>
+
+            <div class="about-text reveal">
+
+                <p>
+                    IRONX is built for people who refuse to settle.
+                    Our training environment combines advanced equipment,
+                    expert coaching and a community built around progress.
+                </p>
+
+                <p>
+                    Whether you're building your first foundation or
+                    preparing for peak performance, our programs are
+                    designed to push you further.
+                </p>
+
+                <a href="#programs"
+                   class="btn btn-outline magnetic">
+
+                    Discover Programs
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="about-image parallax-image">
+
+            <img
+                src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=1800&q=90"
+                alt="Gym training"
+            >
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         STATS
+    ========================================= -->
+
+    <section class="stats">
+
+        <div class="stats-grid">
+
+            <div class="stat reveal">
+
+                <div class="stat-number counter"
+                     data-target="1200">
+
+                    0
+
+                </div>
+
+                <div class="stat-label">
+                    Active Members
+                </div>
+
+            </div>
+
+            <div class="stat reveal">
+
+                <div class="stat-number counter"
+                     data-target="18">
+
+                    0
+
+                </div>
+
+                <div class="stat-label">
+                    Expert Coaches
+                </div>
+
+            </div>
+
+            <div class="stat reveal">
+
+                <div class="stat-number counter"
+                     data-target="35">
+
+                    0
+
+                </div>
+
+                <div class="stat-label">
+                    Training Programs
+                </div>
+
+            </div>
+
+            <div class="stat reveal">
+
+                <div class="stat-number counter"
+                     data-target="12">
+
+                    0
+
+                </div>
+
+                <div class="stat-label">
+                    Years Strong
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         WORKOUTS
+    ========================================= -->
+
+    <section class="workouts" id="workouts">
+
+        <div class="workout-heading">
+
+            <div class="section-label reveal">
+                02 — Training
+            </div>
+
+            <h2 class="section-title reveal">
+                FIND YOUR<br>
+                <span>STRENGTH.</span>
+            </h2>
+
+        </div>
+
+
+        <div class="horizontal-wrapper">
+
+            <!-- CARD 1 -->
+
+            <div class="workout-card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=1000&q=85"
+                    alt="Strength training"
+                >
+
+                <div class="workout-content">
+
+                    <div class="workout-number">
+                        01 / STRENGTH
+                    </div>
+
+                    <div class="workout-name">
+                        POWER
+                    </div>
+
+                    <div class="workout-desc">
+                        Build serious strength with structured
+                        progressive resistance training.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CARD 2 -->
+
+            <div class="workout-card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1000&q=85"
+                    alt="Gym workout"
+                >
+
+                <div class="workout-content">
+
+                    <div class="workout-number">
+                        02 / CONDITIONING
+                    </div>
+
+                    <div class="workout-name">
+                        ATHLETE
+                    </div>
+
+                    <div class="workout-desc">
+                        Improve speed, endurance and explosive
+                        athletic performance.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CARD 3 -->
+
+            <div class="workout-card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=1000&q=85"
+                    alt="Fitness workout"
+                >
+
+                <div class="workout-content">
+
+                    <div class="workout-number">
+                        03 / FITNESS
+                    </div>
+
+                    <div class="workout-name">
+                        BURN
+                    </div>
+
+                    <div class="workout-desc">
+                        High intensity workouts designed to
+                        burn calories and build conditioning.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CARD 4 -->
+
+            <div class="workout-card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1000&q=85"
+                    alt="Bodybuilding"
+                >
+
+                <div class="workout-content">
+
+                    <div class="workout-number">
+                        04 / BODYBUILDING
+                    </div>
+
+                    <div class="workout-name">
+                        SCULPT
+                    </div>
+
+                    <div class="workout-desc">
+                        Build muscle and create a stronger,
+                        more powerful physique.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CARD 5 -->
+
+            <div class="workout-card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=1000&q=85"
+                    alt="Functional training"
+                >
+
+                <div class="workout-content">
+
+                    <div class="workout-number">
+                        05 / FUNCTIONAL
+                    </div>
+
+                    <div class="workout-name">
+                        MOVE
+                    </div>
+
+                    <div class="workout-desc">
+                        Improve mobility, balance and everyday
+                        physical performance.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         PROGRAMS
+    ========================================= -->
+
+    <section class="programs" id="programs">
+
+        <div class="section-label reveal">
+            03 — Programs
+        </div>
+
+        <h2 class="section-title reveal">
+            TRAINING<br>
+            <span>FOR EVERYONE.</span>
+        </h2>
+
+
+        <div class="program-grid">
+
+            <div class="program reveal">
+
+                <div class="program-icon">
+                    🏋️
+                </div>
+
+                <h3>
+                    PERSONAL
+                </h3>
+
+                <p>
+                    One-on-one coaching with customized
+                    workout plans designed around your goals.
+                </p>
+
+            </div>
+
+
+            <div class="program reveal">
+
+                <div class="program-icon">
+                    ⚡
+                </div>
+
+                <h3>
+                    HIIT
+                </h3>
+
+                <p>
+                    High intensity interval training designed
+                    to increase endurance and burn calories.
+                </p>
+
+            </div>
+
+
+            <div class="program reveal">
+
+                <div class="program-icon">
+                    🧘
+                </div>
+
+                <h3>
+                    MOBILITY
+                </h3>
+
+                <p>
+                    Improve flexibility, movement quality
+                    and recovery with guided mobility sessions.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         PRICING
+    ========================================= -->
+
+    <section class="pricing" id="pricing">
+
+        <div class="pricing-heading">
+
+            <div class="section-label reveal">
+                04 — Membership
+            </div>
+
+            <h2 class="section-title reveal">
+                CHOOSE YOUR<br>
+                <span>PLAN.</span>
+            </h2>
+
+            <p class="reveal">
+                Simple memberships. Serious results.
+            </p>
+
+        </div>
+
+
+        <div class="pricing-grid">
+
+
+            <!-- BASIC -->
+
+            <div class="price-card reveal">
+
+                <div class="price-name">
+                    STARTER
+                </div>
+
+                <div class="price">
+                    ₹999
+                    <small>/ month</small>
+                </div>
+
+                <ul class="features">
+
+                    <li>
+                        Gym Access
+                    </li>
+
+                    <li>
+                        Locker Access
+                    </li>
+
+                    <li>
+                        Basic Equipment
+                    </li>
+
+                    <li>
+                        Group Classes
+                    </li>
+
+                </ul>
+
+                <a href="#"
+                   class="btn btn-outline">
+                    Choose Plan
+                </a>
+
+            </div>
+
+
+            <!-- PRO -->
+
+            <div class="price-card featured reveal">
+
+                <div class="popular">
+                    Most Popular
+                </div>
+
+                <div class="price-name">
+                    PRO
+                </div>
+
+                <div class="price">
+                    ₹1,999
+                    <small>/ month</small>
+                </div>
+
+                <ul class="features">
+
+                    <li>
+                        Unlimited Gym Access
+                    </li>
+
+                    <li>
+                        Personal Trainer
+                    </li>
+
+                    <li>
+                        All Group Classes
+                    </li>
+
+                    <li>
+                        Nutrition Guidance
+                    </li>
+
+                    <li>
+                        Progress Tracking
+                    </li>
+
+                </ul>
+
+                <a href="#"
+                   class="btn btn-primary">
+                    Choose Plan
+                </a>
+
+            </div>
+
+
+            <!-- ELITE -->
+
+            <div class="price-card reveal">
+
+                <div class="price-name">
+                    ELITE
+                </div>
+
+                <div class="price">
+                    ₹2,999
+                    <small>/ month</small>
+                </div>
+
+                <ul class="features">
+
+                    <li>
+                        Everything in Pro
+                    </li>
+
+                    <li>
+                        Dedicated Coach
+                    </li>
+
+                    <li>
+                        Custom Meal Plan
+                    </li>
+
+                    <li>
+                        Recovery Sessions
+                    </li>
+
+                    <li>
+                        Priority Booking
+                    </li>
+
+                </ul>
+
+                <a href="#"
+                   class="btn btn-outline">
+                    Choose Plan
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         CTA
+    ========================================= -->
+
+    <section class="cta">
+
+        <div class="cta-content">
+
+            <div class="section-label">
+                Your transformation starts here
+            </div>
+
+            <h2>
+                GET<br>
+                <span>STRONGER.</span>
+            </h2>
+
+            <p>
+                Stop waiting for the perfect moment.
+                Start building the strongest version of yourself today.
+            </p>
+
+            <a href="#pricing"
+               class="btn btn-primary magnetic">
+
+                Join IronX
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         FOOTER
+    ========================================= -->
+
+    <footer>
+
+        <div class="footer-grid">
+
+            <div>
+
+                <div class="footer-logo">
+                    IRON<span>X</span>
+                </div>
+
+                <p>
+                    Premium fitness training for people
+                    who want more from themselves.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Explore
+                </h4>
+
+                <ul>
+
+                    <li>
+                        <a href="#about">
+                            About
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#workouts">
+                            Workouts
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#programs">
+                            Programs
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#pricing">
+                            Membership
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Social
+                </h4>
+
+                <ul>
+
+                    <li>
+                        Instagram
+                    </li>
+
+                    <li>
+                        Facebook
+                    </li>
+
+                    <li>
+                        YouTube
+                    </li>
+
+                    <li>
+                        TikTok
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Contact
+                </h4>
+
+                <ul>
+
+                    <li>
+                        +91 98765 43210
+                    </li>
+
+                    <li>
+                        hello@ironx.com
+                    </li>
+
+                    <li>
+                        Kozhikode, Kerala
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+
+        <div class="copyright">
+
+            <span>
+                © 2026 IRONX FITNESS CLUB
+            </span>
+
+            <span>
+                BUILT FOR THE STRONG
+            </span>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- =========================================
+         GSAP JAVASCRIPT
+    ========================================= -->
+
+    <script>
+
+        /* =========================================
+           REGISTER SCROLLTRIGGER
+        ========================================= */
+
+        gsap.registerPlugin(ScrollTrigger);
+
+
+        /* =========================================
+           LOADER ANIMATION
+        ========================================= */
+
+        const loaderTimeline = gsap.timeline();
+
+        loaderTimeline
+
+            .to(".loader-title", {
+                opacity: 1,
+                duration: .8,
+                ease: "power3.out"
+            })
+
+            .to(".loader-line", {
+                width: "150px",
+                duration: 1,
+                ease: "power3.inOut"
+            })
+
+            .to(".loader", {
+                yPercent: -100,
+                duration: 1.2,
+                delay: .3,
+                ease: "power4.inOut"
+            })
+
+            .from(".hero-bg", {
+                scale: 1.3,
+                duration: 1.8,
+                ease: "power3.out"
+            }, "-=1")
+
+            .from(".hero-line", {
+                yPercent: 120,
+                opacity: 0,
+                stagger: .15,
+                duration: 1.2,
+                ease: "power4.out"
+            }, "-=1")
+
+            .from(".hero-reveal", {
+                y: 40,
+                opacity: 0,
+                stagger: .15,
+                duration: .8,
+                ease: "power3.out"
+            }, "-=.6");
+
+
+        /* =========================================
+           CUSTOM CURSOR
+        ========================================= */
+
+        const cursor = document.querySelector(".cursor");
+        const cursorDot = document.querySelector(".cursor-dot");
+
+        window.addEventListener("mousemove", (e) => {
+
+            gsap.to(cursor, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: .25,
+                ease: "power2.out"
+            });
+
+            gsap.to(cursorDot, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: .05
+            });
+
+        });
+
+
+        /* =========================================
+           CURSOR HOVER
+        ========================================= */
+
+        document.querySelectorAll("a, button, .program, .workout-card")
+        .forEach(element => {
+
+            element.addEventListener("mouseenter", () => {
+
+                gsap.to(cursor, {
+                    width: 55,
+                    height: 55,
+                    background: "rgba(215,255,0,.12)",
+                    duration: .3
+                });
+
+            });
+
+            element.addEventListener("mouseleave", () => {
+
+                gsap.to(cursor, {
+                    width: 20,
+                    height: 20,
+                    background: "transparent",
+                    duration: .3
+                });
+
+            });
+
+        });
+
+
+        /* =========================================
+           MAGNETIC BUTTONS
+        ========================================= */
+
+        document.querySelectorAll(".magnetic")
+        .forEach(button => {
+
+            button.addEventListener("mousemove", function(e) {
+
+                const rect = this.getBoundingClientRect();
+
+                const x =
+                    e.clientX -
+                    rect.left -
+                    rect.width / 2;
+
+                const y =
+                    e.clientY -
+                    rect.top -
+                    rect.height / 2;
+
+                gsap.to(this, {
+                    x: x * .2,
+                    y: y * .2,
+                    duration: .3,
+                    ease: "power2.out"
+                });
+
+            });
+
+            button.addEventListener("mouseleave", function() {
+
+                gsap.to(this, {
+                    x: 0,
+                    y: 0,
+                    duration: .5,
+                    ease: "elastic.out(1,.3)"
+                });
+
+            });
+
+        });
+
+
+        /* =========================================
+           SCROLL REVEAL
+        ========================================= */
+
+        gsap.utils.toArray(".reveal").forEach(element => {
+
+            gsap.from(element, {
+
+                y: 80,
+                opacity: 0,
+
+                duration: 1,
+
+                ease: "power3.out",
+
+                scrollTrigger: {
+
+                    trigger: element,
+
+                    start: "top 85%",
+
+                    toggleActions:
+                        "play none none reverse"
+
+                }
+
+            });
+
+        });
+
+
+        /* =========================================
+           PARALLAX IMAGE
+        ========================================= */
+
+        gsap.to(".parallax-image img", {
+
+            yPercent: -12,
+
+            ease: "none",
+
+            scrollTrigger: {
+
+                trigger: ".parallax-image",
+
+                start: "top bottom",
+
+                end: "bottom top",
+
+                scrub: true
+
+            }
+
+        });
+
+
+        /* =========================================
+           HERO PARALLAX
+        ========================================= */
+
+        gsap.to(".hero-bg", {
+
+            yPercent: 15,
+
+            ease: "none",
+
+            scrollTrigger: {
+
+                trigger: ".hero",
+
+                start: "top top",
+
+                end: "bottom top",
+
+                scrub: true
+
+            }
+
+        });
+
+
+        /* =========================================
+           HORIZONTAL SCROLL
+        ========================================= */
+
+        const horizontalSection =
+            document.querySelector(".workouts");
+
+        const horizontalWrapper =
+            document.querySelector(".horizontal-wrapper");
+
+
+        function horizontalScroll() {
+
+            const amount =
+                horizontalWrapper.scrollWidth -
+                window.innerWidth;
+
+            gsap.to(horizontalWrapper, {
+
+                x: -amount,
+
+                ease: "none",
+
+                scrollTrigger: {
+
+                    trigger: horizontalSection,
+
+                    start: "top top",
+
+                    end: () =>
+                        "+=" + amount,
+
+                    pin: true,
+
+                    scrub: 1,
+
+                    invalidateOnRefresh: true
+
+                }
+
+            });
+
+        }
+
+        horizontalScroll();
+
+
+        /* =========================================
+           MARQUEE
+        ========================================= */
+
+        gsap.to(".marquee-track", {
+
+            xPercent: -50,
+
+            duration: 20,
+
+            ease: "none",
+
+            repeat: -1
+
+        });
+
+
+        /* =========================================
+           COUNTERS
+        ========================================= */
+
+        document.querySelectorAll(".counter")
+        .forEach(counter => {
+
+            const target =
+                Number(counter.dataset.target);
+
+            const obj = {
+                value: 0
+            };
+
+            gsap.to(obj, {
+
+                value: target,
+
+                duration: 2.5,
+
+                ease: "power2.out",
+
+                scrollTrigger: {
+
+                    trigger: counter,
+
+                    start: "top 85%",
+
+                    once: true
+
+                },
+
+                onUpdate: () => {
+
+                    counter.innerText =
+                        Math.floor(obj.value).toLocaleString();
+
+                }
+
+            });
+
+        });
+
+
+        /* =========================================
+           PROGRAM CARD ANIMATION
+        ========================================= */
+
+        document.querySelectorAll(".program")
+        .forEach(card => {
+
+            card.addEventListener("mouseenter", () => {
+
+                gsap.to(card, {
+
+                    y: -12,
+
+                    duration: .4,
+
+                    ease: "power3.out"
+
+                });
+
+            });
+
+            card.addEventListener("mouseleave", () => {
+
+                gsap.to(card, {
+
+                    y: 0,
+
+                    duration: .5,
+
+                    ease: "power3.out"
+
+                });
+
+            });
+
+        });
+
+
+        /* =========================================
+           PRICING HOVER
+        ========================================= */
+
+        document.querySelectorAll(".price-card")
+        .forEach(card => {
+
+            card.addEventListener("mouseenter", () => {
+
+                gsap.to(card, {
+
+                    y: -10,
+
+                    duration: .4,
+
+                    ease: "power3.out"
+
+                });
+
+            });
+
+            card.addEventListener("mouseleave", () => {
+
+                gsap.to(card, {
+
+                    y: 0,
+
+                    duration: .4,
+
+                    ease: "power3.out"
+
+                });
+
+            });
+
+        });
+
+
+        /* =========================================
+           MOBILE MENU
+        ========================================= */
+
+        const menuButton =
+            document.querySelector(".menu-btn");
+
+        const navLinks =
+            document.querySelector(".nav-links");
+
+
+        menuButton.addEventListener("click", () => {
+
+            if (navLinks.style.display === "flex") {
+
+                navLinks.style.display = "none";
+
+            } else {
+
+                navLinks.style.display = "flex";
+
+                navLinks.style.position = "absolute";
+
+                navLinks.style.top = "70px";
+
+                navLinks.style.left = "0";
+
+                navLinks.style.width = "100%";
+
+                navLinks.style.padding = "30px";
+
+                navLinks.style.background = "#080808";
+
+                navLinks.style.flexDirection = "column";
+
+            }
+
+        });
+
+
+        /* =========================================
+           REFRESH SCROLLTRIGGER
+        ========================================= */
+
+        window.addEventListener("load", () => {
+
+            ScrollTrigger.refresh();
+
+        });
+
+    </script>
+
+</body>
+</html>
